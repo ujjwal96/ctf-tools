@@ -1,10 +1,12 @@
-from base/archlinux
+FROM base/archlinux
 
+RUN pacman -Sy pacman-contrib --noconfirm
 RUN cat /etc/pacman.d/mirrorlist \ 
         | sed 's/^#Server/Server/' \
         > /etc/pacman.d/mirrorlist.backup \
         && rankmirrors -n 10 /etc/pacman.d/mirrorlist.backup \
         > /etc/pacman.d/mirrorlist
+
 
 RUN echo "[multilib]" >> /etc/pacman.conf
 RUN echo "Include = /etc/pacman.d/mirrorlist" >> /etc/pacman.conf
@@ -51,6 +53,16 @@ USER ctf
 RUN bin/manage-tools -s setup
 RUN echo 'source $(which virtualenvwrapper.sh)' >> ~/.zshrc
 RUN echo 'workon ctftools' >> ~/.zshrc
+
+ENV PATH="${PATH}:/home/ctf/tools/bin"
+
+RUN manage-tools -s install gdb
+RUN manage-tools install pwntools
+RUN manage-tools install peda
+RUN manage-tools install radare2
+RUN manage-tools install sqlmap
+RUN manage-tools install subbrute
+RUN manage-tools install xortool
 
 WORKDIR /home/ctf
 CMD ["zsh", "-i"]
