@@ -2,5 +2,6 @@
 
 docker run -it --rm -h ctftools --name ctftools \
 	-v $HOME/CTFs:/home/ctf/CTFs \
+	--cap-add=SYS_PTRACE --security-opt seccomp=unconfined \
 	ctf-tools
 

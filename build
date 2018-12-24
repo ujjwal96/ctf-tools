@@ -1,4 +1,4 @@
 #! /bin/bash
 
-docker build -t ctf-tools -f Dckerfile.archlinux .
+docker build -t ctf-tools -f Dockerfile.archlinux .
 
