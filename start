@@ -1,7 +1,26 @@
 #! /bin/bash
 
-docker run -it --rm -h ctftools --name ctftools \
-	-v $HOME/CTFs:/home/ctf/CTFs \
-	--cap-add=SYS_PTRACE --security-opt seccomp=unconfined \
-	ctf-tools
+usage() {
+    echo Usage: ./$(basename $0) \[source\] \[destination\]
+}
 
+if [[ $1 == -h || $1 == --help ]]; then
+  usage
+  exit 0
+fi
+
+if [[ $# -eq 0 ]]; then
+    vol=$HOME/CTFs:/home/ctf/CTFs
+elif [[ $# -eq 1 ]]; then
+    vol=$1:/home/ctf/$(basename $1)
+elif [[ $# -eq 2 ]]; then
+    vol=$1:/home/ctf/$2
+else
+    usage
+    exit 1
+fi
+
+docker run -it --rm -h ctftools --name ctftools \
+    -v $vol \
+    --cap-add=SYS_PTRACE --security-opt seccomp=unconfined \
+    ctf-tools
